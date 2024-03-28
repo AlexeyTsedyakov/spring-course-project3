@@ -1,0 +1,3 @@
+rootProject.name = 'spring-course-project3'
+include 'server'
+include 'client'
