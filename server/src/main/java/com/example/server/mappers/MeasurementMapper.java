@@ -14,7 +14,6 @@ public interface MeasurementMapper {
     List<MeasurementDto> toMeasurementDtos(List<Measurement> measurements);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "created_at", ignore = true)
     @Mapping(target = "sensor.id", ignore = true)
     Measurement toMeasurement(MeasurementDto measurementDto);
 }

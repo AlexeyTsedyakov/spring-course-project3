@@ -1,15 +1,19 @@
 package org.example.client;
 
+import org.knowm.xchart.XYChart;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Sensor sensor = registerSensor();
-        addMeasurements(sensor);
+//        Sensor sensor = registerSensor();
+//        addMeasurements(sensor);
+        getAllMeasurements().forEach(System.out::println);
     }
 
     public static Sensor registerSensor() {
@@ -31,19 +35,22 @@ public class Main {
             double random = -100 + (Math.random() * 200);   // from -100 to 100
             BigDecimal value = BigDecimal.valueOf(random).setScale(2, RoundingMode.HALF_UP);
             boolean raining = Double.compare(Math.random(), 0.5) >= 0;  // 50/50
-            Measurement measurement = new Measurement(value, raining, sensor);
+            Measurement measurement = new Measurement(value, raining, sensor, null);
 
             String response = restTemplate.postForObject(url, measurement, String.class);
             System.out.println(response);
         }
     }
 
-    public static ArrayList<Measurement> getAllMeasurements() {
+    public static List<Measurement> getAllMeasurements() {
         RestTemplate restTemplate = new RestTemplate();
         String url = "http://localhost:8080/measurements";
-        ArrayList<Measurement> response = restTemplate.getForObject(url, ArrayList.class);
-        System.out.println(response);
+        ParameterizedTypeReference<List<Measurement>> typeReference = new ParameterizedTypeReference<>() {};
 
-        return null;
+        return restTemplate.exchange(url, HttpMethod.GET, null, typeReference).getBody();
+    }
+
+    public static void saveMeasurementsChart(List<Measurement> measurements) {
+        XYChart chart = new XYChart(800, 600);
     }
 }

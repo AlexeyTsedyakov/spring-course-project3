@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.validator.constraints.Range;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 public class MeasurementDto {
@@ -17,4 +18,6 @@ public class MeasurementDto {
 
     @NotNull(message = "Sensor should not be empty!")
     private SensorDto sensor;
+
+    private LocalDateTime created_at;
 }
