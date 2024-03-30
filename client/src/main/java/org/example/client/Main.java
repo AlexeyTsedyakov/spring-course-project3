@@ -1,5 +1,6 @@
 package org.example.client;
 
+import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.XYChart;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -7,13 +8,18 @@ import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.ZoneId;
+import java.time.chrono.ChronoZonedDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-//        Sensor sensor = registerSensor();
-//        addMeasurements(sensor);
-        getAllMeasurements().forEach(System.out::println);
+        Sensor sensor = registerSensor();
+        addMeasurements(sensor);
+        List<Measurement> measurements = getAllMeasurements();
+        measurements.forEach(System.out::println);
+        saveMeasurementsChart(measurements);
     }
 
     public static Sensor registerSensor() {
@@ -52,5 +58,16 @@ public class Main {
 
     public static void saveMeasurementsChart(List<Measurement> measurements) {
         XYChart chart = new XYChart(800, 600);
+        List<Date> xData = measurements.stream()
+                .map(Measurement::getCreatedAt)
+                .map(ltd -> ltd.atZone(ZoneId.systemDefault()))
+                .map(ChronoZonedDateTime::toInstant)
+                .map(Date::from)
+                .toList();
+        List<Double> yData = measurements.stream()
+                .map(m -> m.getValue().doubleValue())
+                .toList();
+        chart.addSeries("measurements", xData, yData);
+        new SwingWrapper(chart).displayChart();
     }
 }

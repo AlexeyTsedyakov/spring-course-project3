@@ -19,5 +19,5 @@ public class MeasurementDto {
     @NotNull(message = "Sensor should not be empty!")
     private SensorDto sensor;
 
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }

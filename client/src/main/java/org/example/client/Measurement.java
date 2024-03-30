@@ -14,5 +14,5 @@ public class Measurement {
     private BigDecimal value;
     private Boolean raining;
     private Sensor sensor;
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 }
